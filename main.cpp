@@ -27,7 +27,8 @@ void applyColorScheme(const QString& src, const QString& dst)
 int main(int argc, char** argv) {
     Q_UNUSED(argc)
 
-    applyColorScheme(QString(argv[1]), QString(argv[2]));
+    auto kdeglobals = QStandardPaths::locate(QStandardPaths::GenericConfigLocation, "kdeglobals");
+    applyColorScheme(QString(argv[1]), kdeglobals);
 
     return 0;
 }
