@@ -19,8 +19,8 @@ void applyColorScheme(const QString& src, const QString& dst)
 
     configMerge(srcConf, dstConf);
 
-    QString schemeName = KConfigGroup(srcConf, QStringLiteral("General")).readEntry("Name");
-    KConfigGroup(dstConf, QStringLiteral("General")).writeEntry("ColorScheme", schemeName);
+    QString schemeName = KConfigGroup(srcConf, "General").readEntry("Name");
+    KConfigGroup(dstConf, "General").writeEntry("ColorScheme", schemeName);
     dstConf->sync();
 }
 
