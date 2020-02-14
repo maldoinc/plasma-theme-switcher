@@ -24,7 +24,7 @@ void applyColorSchemeToFile(const QString &src, const QString &dst) {
     dstConf->sync();
 }
 
-void emitColorSchemeChangedSignals() {
+void emitColorSchemeChangedSignal() {
     QDBusMessage message = QDBusMessage::createSignal("/KGlobalSettings", "org.kde.KGlobalSettings", "notifyChange");
     message.setArguments(QList<QVariant>{0, 0});
     QDBusConnection::sessionBus().send(message);
@@ -39,6 +39,6 @@ void plasmaApplyColorScheme(const QString &source) {
     QString kdeglobals = QStandardPaths::locate(QStandardPaths::GenericConfigLocation, "kdeglobals");
     applyColorSchemeToFile(source, kdeglobals);
 
-    emitColorSchemeChangedSignals();
+    emitColorSchemeChangedSignal();
     reloadKwin();
 }
