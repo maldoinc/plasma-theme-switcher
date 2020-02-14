@@ -3,6 +3,8 @@
 #include <KConfigGroup>
 #include <QtDBus/QDBusMessage>
 #include <QtDBus/QDBusConnection>
+#include <QtCore/QFileInfo>
+#include "exceptions/RuntimeException.h"
 
 void configMerge(const KSharedConfigPtr &srcConf, const KSharedConfigPtr &dstConf) {
     for (const QString &group: srcConf->groupList()) {
@@ -36,6 +38,10 @@ void reloadKwin() {
 }
 
 void plasmaApplyColorScheme(const QString &source) {
+    if (!QFileInfo(source).isReadable()) {
+        throw RuntimeException(QStringLiteral("File \"%1\" is not readable").arg(source));
+    }
+
     QString kdeglobals = QStandardPaths::locate(QStandardPaths::GenericConfigLocation, "kdeglobals");
     applyColorSchemeToFile(source, kdeglobals);
 
