@@ -75,7 +75,7 @@ void emitWidgetStyleChangedSignals(const QString &widgetStyle) {
         message.setArguments(QList<QVariant>{"org.kde.kdeglobals.KDE", "widgetStyle", widgetStyle});
         QDBusConnection::sessionBus().send(message);
     }
-};
+}
 
 void plasmaApplyWidgetStyle(const QString &widgetStyle) {
     KSharedConfigPtr conf = KSharedConfig::openConfig(locateKdeGlobals(), KSharedConfig::CascadeConfig);
