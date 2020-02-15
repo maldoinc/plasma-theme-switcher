@@ -2,7 +2,7 @@
 #include <QtCore/QTextStream>
 #include <QtCore/QCoreApplication>
 #include <QtCore/QCommandLineParser>
-#include "colorscheme.h"
+#include "utils/plasma.h"
 #include "exceptions/RuntimeException.h"
 
 int main(int argc, char **argv) {
@@ -13,7 +13,7 @@ int main(int argc, char **argv) {
     QCoreApplication::setApplicationVersion("0.1");
 
     QCommandLineParser parser;
-    parser.setApplicationDescription("Quickly apply plasma color schemes from the command-line");
+    parser.setApplicationDescription("Quickly apply plasma color schemes and widget styles from the command-line");
     parser.addHelpOption();
     parser.addVersionOption();
 
@@ -23,15 +23,28 @@ int main(int argc, char **argv) {
             "colors"
     );
 
+    QCommandLineOption widgetStyleOption(
+            QStringList{"w", "widgetStyle"},
+            R"(Name of widget style to apply. Found in Plasma settings as "Widget Style" or "Application Style")",
+            "widgetStyle"
+    );
+
     parser.addOption(colorShemeOption);
+    parser.addOption(widgetStyleOption);
     parser.process(app);
 
-    if (!parser.isSet(colorShemeOption)) {
+    if (!(parser.isSet(colorShemeOption) || parser.isSet(widgetStyleOption))) {
         parser.showHelp(1);
     }
 
     try {
-        plasmaApplyColorScheme(parser.value(colorShemeOption));
+        if (parser.isSet(colorShemeOption)) {
+            plasmaApplyColorScheme(parser.value(colorShemeOption));
+        }
+
+        if (parser.isSet(widgetStyleOption)) {
+            plasmaApplyWidgetStyle(parser.value(widgetStyleOption));
+        }
     } catch (RuntimeException &e) {
         QTextStream(stderr) << "ERR: " << e.message() << "\n";
 

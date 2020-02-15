@@ -17,6 +17,11 @@ find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS Core DBus)
 find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS Config)
 
 add_definitions(-Wall -O2 -fexceptions)
-add_executable(plasma-theme main.cpp colorscheme.cpp colorscheme.h exceptions/RuntimeException.cpp exceptions/RuntimeException.h)
+add_executable(plasma-theme
+        main.cpp
+        utils/plasma.cpp
+        utils/plasma.h
+        exceptions/RuntimeException.cpp
+        exceptions/RuntimeException.h)
 
 target_link_libraries(plasma-theme KF5::ConfigCore Qt5::DBus)
