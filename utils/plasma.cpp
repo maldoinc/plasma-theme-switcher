@@ -107,11 +107,10 @@ void plasmaApplyColorScheme(const QStringList &colors) {
 void emitWidgetStyleChangedSignals(const QString &widgetStyle) {
     kdeGlobalSettingsNotifyChange(WidgetStyleChanged);
 
-    for (const QString &interface: QStringList{"org.freedesktop.impl.portal.Settings",
-                                               "org.freedesktop.portal.Settings"}) {
+    for (const QString &intf: QStringList{"org.freedesktop.impl.portal.Settings", "org.freedesktop.portal.Settings"}) {
         QDBusMessage message = QDBusMessage::createSignal(
                 "/org/freedesktop/portal/desktop",
-                interface,
+                intf,
                 "SettingChanged"
         );
         message.setArguments(QList<QVariant>{"org.kde.kdeglobals.KDE", "widgetStyle", widgetStyle});
