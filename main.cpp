@@ -19,13 +19,13 @@ int main(int argc, char **argv) {
 
     QCommandLineOption colorShemeOption(
             QStringList{"c", "colors"},
-            "A file containing plasma color scheme information",
+            "A file containing plasma color scheme information. Use this argument once to apply directly or twice to cycle.",
             "colors"
     );
 
     QCommandLineOption widgetStyleOption(
             QStringList{"w", "widgetStyle"},
-            R"(Name of widget style to apply. Found in Plasma settings as "Widget Style" or "Application Style")",
+            R"(Name of widget style to apply. Use argument once to apply directly or twice to cycle.")",
             "widgetStyle"
     );
 
