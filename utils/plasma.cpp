@@ -36,6 +36,16 @@ QString colorSchemeFileGetName(const QString &filename) {
     return QFileInfo(filename).baseName();
 }
 
+void assertListHasOneOrTwoItems(const QStringList &list, const QString &listName) {
+    const int numItems = list.length();
+
+    if (numItems == 0 || numItems > 2) {
+        auto message = QStringLiteral("Invalid number of items in %1 list. Expected 1 or 2, found %2");
+
+        throw RuntimeException(message.arg(listName).arg(numItems));
+    }
+}
+
 void applyColorSchemeToFile(const QString &src, const QString &dst) {
     KSharedConfigPtr srcConf = KSharedConfig::openConfig(src, KSharedConfig::CascadeConfig);
     KSharedConfigPtr dstConf = KSharedConfig::openConfig(dst, KSharedConfig::CascadeConfig);
@@ -83,15 +93,16 @@ QString plasmaReadCurrentColorScheme() {
     return conf->group("General").readEntry("ColorScheme");
 }
 
+QString plasmaReadCurrentWidgetStyle() {
+    KSharedConfigPtr conf = KSharedConfig::openConfig(locateKdeGlobals(), KSharedConfig::CascadeConfig);
+
+    return conf->group("KDE").readEntry("widgetStyle");
+}
+
 void plasmaApplyColorScheme(const QStringList &colors) {
-    const int numItems = colors.length();
+    assertListHasOneOrTwoItems(colors, "color scheme");
 
-    if (numItems == 0 || numItems > 2) {
-        throw RuntimeException(QStringLiteral("Invalid number of items in colors list. Expected 1 or 2, found %1").arg(
-                numItems));
-    }
-
-    if (numItems == 1) {
+    if (colors.length() == 1) {
         plasmaApplyColorScheme(colors.first());
 
         return;
@@ -124,4 +135,16 @@ void plasmaApplyWidgetStyle(const QString &widgetStyle) {
     conf->sync();
 
     emitWidgetStyleChangedSignals(widgetStyle);
+}
+
+void plasmaApplyWidgetStyle(const QStringList &widgets) {
+    assertListHasOneOrTwoItems(widgets, "widget style");
+
+    if (widgets.length() == 1) {
+        plasmaApplyWidgetStyle(widgets.first());
+
+        return;
+    }
+
+    plasmaApplyWidgetStyle(plasmaReadCurrentWidgetStyle() == widgets.first() ? widgets[1] : widgets[0]);
 }

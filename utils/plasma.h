@@ -4,7 +4,6 @@
 #include <QtCore/QString>
 
 void plasmaApplyColorScheme(const QStringList &colors);
-
-void plasmaApplyWidgetStyle(const QString &widgetStyle);
+void plasmaApplyWidgetStyle(const QStringList &colors);
 
 #endif

@@ -43,7 +43,7 @@ int main(int argc, char **argv) {
         }
 
         if (parser.isSet(widgetStyleOption)) {
-            plasmaApplyWidgetStyle(parser.value(widgetStyleOption));
+            plasmaApplyWidgetStyle(parser.values(widgetStyleOption));
         }
     } catch (RuntimeException &e) {
         QTextStream(stderr) << "ERR: " << e.message() << "\n";
