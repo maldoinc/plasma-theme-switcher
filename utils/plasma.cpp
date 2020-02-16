@@ -24,13 +24,17 @@ void configMerge(const KSharedConfigPtr &srcConf, const KSharedConfigPtr &dstCon
     }
 }
 
+QString colorSchemeFileGetName(const QString &filename) {
+    return QFileInfo(filename).baseName();
+}
+
 void applyColorSchemeToFile(const QString &src, const QString &dst) {
     KSharedConfigPtr srcConf = KSharedConfig::openConfig(src, KSharedConfig::CascadeConfig);
     KSharedConfigPtr dstConf = KSharedConfig::openConfig(dst, KSharedConfig::CascadeConfig);
 
     configMerge(srcConf, dstConf);
 
-    KConfigGroup(dstConf, "General").writeEntry("ColorScheme", QFileInfo(src).baseName());
+    KConfigGroup(dstConf, "General").writeEntry("ColorScheme", colorSchemeFileGetName(src));
     dstConf->sync();
 }
 
@@ -68,33 +72,23 @@ void plasmaApplyColorScheme(const QString &source) {
 QString plasmaReadCurrentColorScheme() {
     KSharedConfigPtr conf = KSharedConfig::openConfig(locateKdeGlobals(), KSharedConfig::CascadeConfig);
 
-    return conf->group("KDE").readEntry("ColorScheme");
-}
-
-QString plasmaReadCurrentWidgetStyleName() {
-    KSharedConfigPtr conf = KSharedConfig::openConfig(locateKdeGlobals(), KSharedConfig::CascadeConfig);
-
-    return conf->group("KDE").readEntry("widgetStyle");
-}
-
-QString colorSchemeFileGetName(const QString &filename) {
-    return QFileInfo(filename).baseName();
+    return conf->group("General").readEntry("ColorScheme");
 }
 
 void plasmaApplyColorScheme(const QStringList &colors) {
     const int numItems = colors.length();
 
     if (numItems == 0 || numItems > 2) {
-        throw RuntimeException(QStringLiteral("Invalid number of items in colors list. Expected 1 or 2. Found %1").arg(
+        throw RuntimeException(QStringLiteral("Invalid number of items in colors list. Expected 1 or 2, found %1").arg(
                 numItems));
     }
 
     if (numItems == 1) {
         plasmaApplyColorScheme(colors.first());
+
+        return;
     }
 
-    const auto schemeName = colorSchemeFileGetName(colors.first());
-    const auto current = plasmaReadCurrentColorScheme();
     const QString scheme = plasmaReadCurrentColorScheme() == colorSchemeFileGetName(colors.first())
                            ? colors[1]
                            : colors[0];
