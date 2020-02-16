@@ -62,6 +62,43 @@ void plasmaApplyColorScheme(const QString &source) {
     reloadKwin();
 }
 
+QString plasmaReadCurrentColorScheme() {
+    KSharedConfigPtr conf = KSharedConfig::openConfig(locateKdeGlobals(), KSharedConfig::CascadeConfig);
+
+    return conf->group("KDE").readEntry("ColorScheme");
+}
+
+QString plasmaReadCurrentWidgetStyleName() {
+    KSharedConfigPtr conf = KSharedConfig::openConfig(locateKdeGlobals(), KSharedConfig::CascadeConfig);
+
+    return conf->group("KDE").readEntry("widgetStyle");
+}
+
+QString colorSchemeFileGetName(const QString &filename) {
+    return QFileInfo(filename).baseName();
+}
+
+void plasmaApplyColorScheme(const QStringList &colors) {
+    const int numItems = colors.length();
+
+    if (numItems == 0 || numItems > 2) {
+        throw RuntimeException(QStringLiteral("Invalid number of items in colors list. Expected 1 or 2. Found %1").arg(
+                numItems));
+    }
+
+    if (numItems == 1) {
+        plasmaApplyColorScheme(colors.first());
+    }
+
+    const auto schemeName = colorSchemeFileGetName(colors.first());
+    const auto current = plasmaReadCurrentColorScheme();
+    const QString scheme = plasmaReadCurrentColorScheme() == colorSchemeFileGetName(colors.first())
+                           ? colors[1]
+                           : colors[0];
+
+    plasmaApplyColorScheme(scheme);
+}
+
 void emitWidgetStyleChangedSignals(const QString &widgetStyle) {
     kdeGlobalSettingsNotifyChange(WidgetStyleChanged);
 

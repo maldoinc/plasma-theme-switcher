@@ -38,8 +38,10 @@ int main(int argc, char **argv) {
     }
 
     try {
+        QTextStream(stdout) << parser.values(colorShemeOption).length();
+
         if (parser.isSet(colorShemeOption)) {
-            plasmaApplyColorScheme(parser.value(colorShemeOption));
+            plasmaApplyColorScheme(parser.values(colorShemeOption));
         }
 
         if (parser.isSet(widgetStyleOption)) {
