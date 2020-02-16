@@ -26,8 +26,7 @@ void applyColorSchemeToFile(const QString &src, const QString &dst) {
 
     configMerge(srcConf, dstConf);
 
-    QString schemeName = KConfigGroup(srcConf, "General").readEntry("Name");
-    KConfigGroup(dstConf, "General").writeEntry("ColorScheme", schemeName);
+    KConfigGroup(dstConf, "General").writeEntry("ColorScheme", QFileInfo(src).baseName());
     dstConf->sync();
 }
 
