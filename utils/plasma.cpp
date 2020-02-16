@@ -13,6 +13,8 @@ enum KdeGlobalsChangeType {
 
 void configMerge(const KSharedConfigPtr &srcConf, const KSharedConfigPtr &dstConf) {
     for (const QString &group: srcConf->groupList()) {
+        // General group contains no color information and the name will be applied via another call
+        // as the name described here is not the one that should be used
         if (group == "General") {
             continue;
         }
@@ -24,6 +26,12 @@ void configMerge(const KSharedConfigPtr &srcConf, const KSharedConfigPtr &dstCon
     }
 }
 
+/**
+ * Returns the basename of the filename in the argument. Plasma uses that as the "name" of the active colorscheme
+ * in kdeglobals despite color schemes containing two "name" entries in "Name" and "ColorScheme".
+ *
+ * Settings app uses General.Name key as the display label for color schemes
+ */
 QString colorSchemeFileGetName(const QString &filename) {
     return QFileInfo(filename).baseName();
 }
