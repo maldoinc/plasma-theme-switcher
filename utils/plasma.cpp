@@ -13,6 +13,10 @@ enum KdeGlobalsChangeType {
 
 void configMerge(const KSharedConfigPtr &srcConf, const KSharedConfigPtr &dstConf) {
     for (const QString &group: srcConf->groupList()) {
+        if (group == "General") {
+            continue;
+        }
+
         KConfigGroup cg(srcConf, group);
         KConfigGroup cb2(dstConf, group);
 
