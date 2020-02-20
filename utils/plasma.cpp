@@ -4,12 +4,8 @@
 #include <QtDBus/QDBusMessage>
 #include <QtDBus/QDBusConnection>
 #include <QtCore/QFileInfo>
+#include "signals.h"
 #include "exceptions/RuntimeException.h"
-
-enum KdeGlobalsChangeType {
-    ColorSchemeChanged = 0,
-    WidgetStyleChanged = 2
-};
 
 void configMerge(const KSharedConfigPtr &srcConf, const KSharedConfigPtr &dstConf) {
     for (const QString &group: srcConf->groupList()) {
@@ -54,17 +50,6 @@ void applyColorSchemeToFile(const QString &src, const QString &dst) {
 
     KConfigGroup(dstConf, "General").writeEntry("ColorScheme", colorSchemeFileGetName(src));
     dstConf->sync();
-}
-
-void kdeGlobalSettingsNotifyChange(KdeGlobalsChangeType changeType) {
-    QDBusMessage message = QDBusMessage::createSignal(
-            "/KGlobalSettings",
-            "org.kde.KGlobalSettings",
-            "notifyChange"
-    );
-
-    message.setArguments(QList<QVariant>{changeType, 0});
-    QDBusConnection::sessionBus().send(message);
 }
 
 inline QString locateKdeGlobals() {
@@ -113,13 +98,12 @@ void emitWidgetStyleChangedSignals(const QString &widgetStyle) {
     kdeGlobalSettingsNotifyChange(WidgetStyleChanged);
 
     for (const QString &intf: QStringList{"org.freedesktop.impl.portal.Settings", "org.freedesktop.portal.Settings"}) {
-        QDBusMessage message = QDBusMessage::createSignal(
+        dbusSignal(
                 "/org/freedesktop/portal/desktop",
                 intf,
-                "SettingChanged"
+                "SettingChanged",
+                QStringList{"org.kde.kdeglobals.KDE", "widgetStyle", widgetStyle}
         );
-        message.setArguments(QList<QVariant>{"org.kde.kdeglobals.KDE", "widgetStyle", widgetStyle});
-        QDBusConnection::sessionBus().send(message);
     }
 }
 

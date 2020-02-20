@@ -22,6 +22,8 @@ add_executable(plasma-theme
         utils/plasma.cpp
         utils/plasma.h
         exceptions/RuntimeException.cpp
-        exceptions/RuntimeException.h)
+        exceptions/RuntimeException.h
+        utils/signals.cpp
+        utils/signals.h)
 
-target_link_libraries(plasma-theme KF5::ConfigCore Qt5::DBus)
+target_link_libraries(plasma-theme KF5::ConfigCore)
