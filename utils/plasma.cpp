@@ -26,15 +26,6 @@ void configMerge(const KSharedConfigPtr &srcConf, const KSharedConfigPtr &dstCon
     }
 }
 
-QString plasmaGetVersion() {
-    KSharedConfigPtr conf = KSharedConfig::openConfig(
-            "/usr/share/xsessions/plasma.desktop",
-            KSharedConfig::CascadeConfig
-    );
-
-    return conf->group("Desktop Entry").readEntry("X-KDE-PluginInfo-Version");
-}
-
 /**
  * Returns the basename of the filename in the argument. Plasma uses that as the "name" of the active colorscheme
  * in kdeglobals despite color schemes containing two "name" entries in "Name" and "ColorScheme".
@@ -43,10 +34,6 @@ QString plasmaGetVersion() {
  */
 QString colorSchemeFileGetName(const QString &filename) {
     return QFileInfo(filename).baseName();
-}
-
-bool isOlderThanPlasma518(const QString &version) {
-    return QString::compare("5.18", version) > 0;
 }
 
 void assertListHasOneOrTwoItems(const QStringList &list, const QString &listName) {
@@ -80,11 +67,6 @@ void kdeGlobalSettingsNotifyChange(KdeGlobalsChangeType changeType) {
     QDBusConnection::sessionBus().send(message);
 }
 
-void reloadKwin() {
-    QDBusMessage message = QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
-    QDBusConnection::sessionBus().send(message);
-}
-
 inline QString locateKdeGlobals() {
     return QStandardPaths::locate(QStandardPaths::GenericConfigLocation, "kdeglobals");
 }
@@ -97,11 +79,6 @@ void plasmaApplyColorScheme(const QString &source) {
     applyColorSchemeToFile(source, locateKdeGlobals());
 
     kdeGlobalSettingsNotifyChange(ColorSchemeChanged);
-
-    // seems as from plasma 5.18 reloading kwin is not necessary to fully apply the theme
-    if (isOlderThanPlasma518(plasmaGetVersion())) {
-        reloadKwin();
-    }
 }
 
 QString plasmaReadCurrentColorScheme() {
