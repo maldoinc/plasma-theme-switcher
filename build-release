@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+out=cmake-build-release
+rm -rf $out
+mkdir $out
+cd $out || exit
+
+cmake -DCMAKE_BUILD_TYPE=Release ..
+make
