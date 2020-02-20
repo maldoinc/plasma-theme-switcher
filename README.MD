@@ -11,6 +11,10 @@ Quickly change plasma color schemes and widget styles from the command-line.
 # change color scheme to breezedark and breeze widget style.
 $ plasma-theme --colors /usr/share/color-schemes/BreezeDark.colors --widgetStyle Breeze
 
+# You can also pass the --colors and --widgetStyle options twice to cycle between them.
+# If the first value is the current one then it applies the second value
+# otherwise it applies the first one.
+
 # toggle between light/dark mode
 # if the [--colors, -c] or [--widgetStyle, -w] arguments are passed twice
 # the app will cycle through them
@@ -20,7 +24,10 @@ $ plasma-theme \
     -w Breeze
 
 # for kvantum users, kvantum provides "kvantum" and "kvantum-dark" if the theme supports it.
-# current example using theme KvArc
+# current example using theme KvArc.
+# In this case make sure that initially you use KvArc with kvantum, or KvArcDark with kvantum-dark
+# otherwise you will get the opposite cominations from what you'd expect as this utility
+# will only cycle through the values of each option independently of what the other option is set to
 $ plasma-theme \
     -w kvantum -w kvantum-dark \
     -c ~/.local/share/color-schemes/KvArc.colors \
