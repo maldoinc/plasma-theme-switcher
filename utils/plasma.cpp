@@ -14,9 +14,9 @@ void configMerge(const KSharedConfigPtr &srcConf, const KSharedConfigPtr &dstCon
         }
 
         KConfigGroup cg(srcConf, group);
-        KConfigGroup cb2(dstConf, group);
+        KConfigGroup cg2(dstConf, group);
 
-        cg.copyTo(&cb2);
+        cg.copyTo(&cg2);
     }
 }
 
