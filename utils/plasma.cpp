@@ -18,6 +18,18 @@ void configMerge(const KSharedConfigPtr &srcConf, const KSharedConfigPtr &dstCon
 
         cg.copyTo(&cg2);
     }
+
+    // Copy Colors:Window to Colors:Header
+    // This is a new section recently(?) introduced which is not available in the .colors file
+    // However, make this copy only if the .colors file we are applying does not have its own
+    // Colors:Header section as a means to future-proof it when they start implementing it.
+    // If it does, it will have been copied in the above loop.
+    if (srcConf->hasGroup("Colors:Window") && !srcConf->hasGroup("Colors:Header")) {
+        KConfigGroup cgWindowColor(srcConf, "Colors:Window");
+        KConfigGroup cgHeaderColor(dstConf, "Colors:Header");
+
+        cgWindowColor.copyTo(&cgHeaderColor);
+    }
 }
 
 /**
@@ -76,20 +88,19 @@ QString plasmaReadCurrentWidgetStyle() {
     return conf->group("KDE").readEntry("widgetStyle");
 }
 
-void plasmaApplyColorScheme(const QStringList &colors) {
+int plasmaApplyColorScheme(const QStringList &colors) {
     assertListHasOneOrTwoItems(colors, "color scheme");
 
     if (colors.length() == 1) {
         plasmaApplyColorScheme(colors.first());
 
-        return;
+        return 0;
     }
 
-    const QString scheme = plasmaReadCurrentColorScheme() == colorSchemeFileGetName(colors.first())
-                           ? colors[1]
-                           : colors[0];
+    const int index = plasmaReadCurrentColorScheme() == colorSchemeFileGetName(colors.first()) ? 1 : 0;
+    plasmaApplyColorScheme(colors[index]);
 
-    plasmaApplyColorScheme(scheme);
+    return index;
 }
 
 void emitWidgetStyleChangedSignals(const QString &widgetStyle) {

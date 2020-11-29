@@ -3,7 +3,8 @@
 
 #include <QtCore/QString>
 
-void plasmaApplyColorScheme(const QStringList &colors);
-void plasmaApplyWidgetStyle(const QStringList &colors);
+int plasmaApplyColorScheme(const QStringList &colors);
+void plasmaApplyWidgetStyle(const QStringList &widgets);
+void plasmaApplyWidgetStyle(const QString &widgetStyle);
 
 #endif

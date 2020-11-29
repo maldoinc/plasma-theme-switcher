@@ -25,9 +25,10 @@ $ plasma-theme \
 
 # for kvantum users, kvantum provides "kvantum" and "kvantum-dark" if the theme supports it.
 # current example using theme KvArc.
-# In this case make sure that initially you use KvArc with kvantum, or KvArcDark with kvantum-dark
-# otherwise you will get the opposite cominations from what you'd expect as this utility
-# will only cycle through the values of each option independently of what the other option is set to
+
+# When both parameters have two values, they will always be applied as a pair.
+# In this case kvantum widget will always be applied with KvArc
+# and kvantum-dark with KvArcDark
 $ plasma-theme \
     -w kvantum -w kvantum-dark \
     -c ~/.local/share/color-schemes/KvArc.colors \
@@ -61,4 +62,4 @@ To list built-in widget styles use the following command. Note that not all of t
 $ cat /usr/share/kstyle/themes/*.themerc | grep WidgetStyle | cut -d= -f2
 ```
 
-Additional values are `kvantum` and `kvantum-dark` and `QtCurve` for users of the respective theme engines.
+Additional values are `kvantum`, `kvantum-dark` and `QtCurve` for users of the respective theme engines.

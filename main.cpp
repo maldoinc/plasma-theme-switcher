@@ -38,12 +38,22 @@ int main(int argc, char **argv) {
     }
 
     try {
+        int appliedColorSchemeIndex = -1;
+
         if (parser.isSet(colorShemeOption)) {
-            plasmaApplyColorScheme(parser.values(colorShemeOption));
+            appliedColorSchemeIndex = plasmaApplyColorScheme(parser.values(colorShemeOption));
         }
 
         if (parser.isSet(widgetStyleOption)) {
-            plasmaApplyWidgetStyle(parser.values(widgetStyleOption));
+            const auto widgetStyles = parser.values(widgetStyleOption);
+
+            // If we already applied a color scheme, apply the matching widget style instead of cycling them.
+            // This lets the user apply both options as a pair.
+            if (appliedColorSchemeIndex == -1 || widgetStyles.count() == 1) {
+                plasmaApplyWidgetStyle(widgetStyles);
+            } else {
+                plasmaApplyWidgetStyle(widgetStyles[appliedColorSchemeIndex]);
+            }
         }
     } catch (RuntimeException &e) {
         QTextStream(stderr) << "ERR: " << e.message() << "\n";
