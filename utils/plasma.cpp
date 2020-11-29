@@ -1,8 +1,6 @@
 #include <QString>
 #include <KSharedConfig>
 #include <KConfigGroup>
-#include <QtDBus/QDBusMessage>
-#include <QtDBus/QDBusConnection>
 #include <QtCore/QFileInfo>
 #include "signals.h"
 #include "exceptions/RuntimeException.h"
